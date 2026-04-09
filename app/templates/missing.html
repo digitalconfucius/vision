@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}missing · {{ slug }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb crumb--current">{{ slug }}</span>
+  </div>
+  <h1 class="page-title">page not found</h1>
+  <p class="muted">no page exists at <code>{{ slug }}</code>.</p>
+  <p>
+    <a class="btn-primary" href="{{ url_for('wiki.new_page') }}?slug={{ slug }}">+ create {{ slug }}</a>
+    <a class="btn-ghost" href="{{ url_for('wiki.dashboard') }}">back home</a>
+  </p>
+</div>
+{% endblock %}

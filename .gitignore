@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.Python
+
+# App
+wiki.db
+wiki.db-journal
+wiki.db-wal
+wiki.db-shm
+
+# Editors
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log

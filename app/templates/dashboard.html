@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}dashboard{% endblock %}
+{% block content %}
+<div class="page-wrap dashboard">
+  <div class="breadcrumbs"><span class="crumb crumb--home">◆ vision</span></div>
+  <h1 class="page-title">knowledge graph</h1>
+  <p class="page-lede">your personal wiki. curated by you, maintained by claude code.</p>
+
+  <section class="stats-chips">
+    <a class="chip" href="{{ url_for('wiki.page_index') }}">
+      <span class="chip-n">{{ stats.pages }}</span><span class="chip-l">pages</span>
+    </a>
+    <a class="chip" href="{{ url_for('wiki.tags_index') }}">
+      <span class="chip-n">{{ stats.tags }}</span><span class="chip-l">tags</span>
+    </a>
+    <a class="chip" href="{{ url_for('wiki.graph_view') }}">
+      <span class="chip-n">{{ stats.links }}</span><span class="chip-l">links</span>
+    </a>
+    <span class="chip chip--muted">
+      <span class="chip-n">{{ stats.orphans }}</span><span class="chip-l">orphans</span>
+    </span>
+    <span class="chip chip--warn">
+      <span class="chip-n">{{ stats.broken }}</span><span class="chip-l">broken</span>
+    </span>
+  </section>
+
+  <section class="entry-grid">
+    {% for folder, pages in folder_tree.items() %}
+      {% if folder != '_root' %}
+        <a class="entry-card" href="{{ url_for('wiki.view_page', slug=(folder + '/_README')) if (folder + '/_README') in (all_slugs_list or []) else url_for('wiki.view_page', slug=pages[0].slug) }}"
+           style="--accent: {{ folder|folder_accent }}">
+          <div class="entry-head">
+            <span class="entry-icon">{{ folder|folder_icon }}</span>
+            <span class="entry-label">{{ folder|folder_label }}</span>
+            <span class="entry-n">{{ pages|length }}</span>
+          </div>
+          <ul class="entry-pages">
+            {% for p in pages[:5] %}
+              <li>{{ p.title }}</li>
+            {% endfor %}
+            {% if pages|length > 5 %}<li class="muted">+ {{ pages|length - 5 }} more…</li>{% endif %}
+          </ul>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </section>
+
+  <div class="two-col">
+    <section class="panel">
+      <h2 class="panel-head">recent edits</h2>
+      <ul class="list-compact">
+        {% for p in recent_pages %}
+          <li>
+            <a href="{{ url_for('wiki.view_page', slug=p.slug) }}">
+              <span class="dot" style="background: {{ p.folder|folder_accent }}"></span>
+              <span class="list-title">{{ p.title }}</span>
+              <span class="list-folder muted">{{ p.folder }}</span>
+            </a>
+            <span class="muted small">{{ p.mtime|mtime }}</span>
+          </li>
+        {% else %}
+          <li class="muted">no pages yet — create one with <kbd>n</kbd></li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-head">might need attention</h2>
+      {% if orphans or broken_links %}
+        {% if orphans %}
+          <div class="sub-head">orphans · pages no one links to</div>
+          <ul class="list-compact">
+            {% for o in orphans %}
+              <li><a href="{{ url_for('wiki.view_page', slug=o.slug) }}">
+                <span class="dot" style="background: {{ o.folder|folder_accent }}"></span>
+                <span class="list-title">{{ o.title }}</span>
+                <span class="list-folder muted">{{ o.folder }}</span>
+              </a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if broken_links %}
+          <div class="sub-head">broken wikilinks</div>
+          <ul class="list-compact">
+            {% for b in broken_links %}
+              <li>
+                <span class="wikilink wikilink--broken">{{ b.dst_slug }}</span>
+                <span class="muted small">from <a href="{{ url_for('wiki.view_page', slug=b.src_slug) }}">{{ b.src_title }}</a></span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% else %}
+        <p class="muted">wiki is clean — no orphans, no broken links.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2 class="panel-head">how this works</h2>
+    <div class="howto">
+      <ol>
+        <li>drop sources (articles, pasted notes, screenshots) into <code>raw/</code></li>
+        <li>run claude code in the repo root with a prompt like "ingest the new source in raw/"</li>
+        <li>claude reads <code>CLAUDE.md</code>, updates pages in <code>wiki/</code>, appends to <code>log.md</code></li>
+        <li>refresh this page — everything is reindexed automatically</li>
+      </ol>
+      <p class="muted">the flask app is the reader. claude code is the maintainer. the wiki is the codebase.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

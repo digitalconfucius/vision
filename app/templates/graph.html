@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}graph{% endblock %}
+{% block content %}
+<div class="page-wrap graph-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb crumb--current">graph</span>
+  </div>
+  <h1 class="page-title">graph view</h1>
+  <p class="muted">click a node to open. size = backlinks. color = folder.</p>
+  <div id="graph-canvas" class="graph-canvas"></div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="{{ url_for('static', filename='js/graph.js') }}"></script>
+{% endblock %}

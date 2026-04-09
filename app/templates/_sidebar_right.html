@@ -1,0 +1,21 @@
+{# Right sidebar: default empty (pages override this) #}
+<section class="side-section">
+  <h4 class="side-head">stats</h4>
+  <ul class="stat-list">
+    <li><span>pages</span><b>{{ stats.pages }}</b></li>
+    <li><span>tags</span><b>{{ stats.tags }}</b></li>
+    <li><span>links</span><b>{{ stats.links }}</b></li>
+    <li><span>orphans</span><b>{{ stats.orphans }}</b></li>
+    <li><span>broken</span><b class="{% if stats.broken %}warn{% endif %}">{{ stats.broken }}</b></li>
+  </ul>
+</section>
+
+<section class="side-section">
+  <h4 class="side-head">tips</h4>
+  <ul class="tip-list">
+    <li>press <kbd>/</kbd> to search</li>
+    <li>press <kbd>?</kbd> for all shortcuts</li>
+    <li><code>[[page]]</code> auto-links</li>
+    <li>drop sources in <code>raw/</code> and run claude code</li>
+  </ul>
+</section>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}new page{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb crumb--current">new page</span>
+  </div>
+  <h1 class="page-title">create a new page</h1>
+  {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+  <form method="post" class="edit-form">
+    <label class="field">
+      <span class="field-label">slug <span class="muted">(folder/name, kebab-case)</span></span>
+      <input class="field-input" type="text" name="slug" value="{{ form.slug }}" placeholder="infra/hetzner" autofocus>
+    </label>
+    <label class="field">
+      <span class="field-label">title</span>
+      <input class="field-input" type="text" name="title" value="{{ form.title }}" placeholder="Hetzner VPS">
+    </label>
+    <label class="field">
+      <span class="field-label">body</span>
+      <textarea name="body" class="edit-area" placeholder="## overview&#10;...">{{ form.body }}</textarea>
+    </label>
+    <div class="edit-actions">
+      <button class="btn-primary" type="submit">create</button>
+      <a class="btn-ghost" href="{{ url_for('wiki.dashboard') }}">cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

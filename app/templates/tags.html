@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}tags{% if tag %} · #{{ tag }}{% endif %}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    {% if tag %}
+      <a class="crumb" href="{{ url_for('wiki.tags_index') }}">tags</a>
+      <span class="crumb-sep">›</span>
+      <span class="crumb crumb--current">#{{ tag }}</span>
+    {% else %}
+      <span class="crumb crumb--current">tags</span>
+    {% endif %}
+  </div>
+  <h1 class="page-title">{% if tag %}#{{ tag }}{% else %}all tags{% endif %}</h1>
+
+  <div class="tag-cloud big">
+    {% for t in tags_full %}
+      <a class="tag-pill {% if tag == t.tag %}active{% endif %}" href="{{ url_for('wiki.tag_pages', tag=t.tag) }}">
+        #{{ t.tag }} <span>{{ t.n }}</span>
+      </a>
+    {% else %}
+      <span class="muted">no tags yet.</span>
+    {% endfor %}
+  </div>
+
+  {% if tag %}
+    <section class="panel">
+      <h2 class="panel-head">pages tagged #{{ tag }} ({{ pages|length }})</h2>
+      <ul class="list-compact">
+        {% for p in pages %}
+          <li>
+            <a href="{{ url_for('wiki.view_page', slug=p.slug) }}">
+              <span class="dot" style="background: {{ p.folder|folder_accent }}"></span>
+              <span class="list-title">{{ p.title }}</span>
+              <span class="list-folder muted">{{ p.folder }}</span>
+            </a>
+            <span class="muted small">{{ p.mtime|mtime }}</span>
+          </li>
+        {% else %}
+          <li class="muted">no pages with this tag.</li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

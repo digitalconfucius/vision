@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}all pages{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb crumb--current">index</span>
+  </div>
+  <h1 class="page-title">all pages</h1>
+  <p class="muted">{{ pages|length }} pages total.</p>
+
+  <table class="index-table">
+    <thead><tr><th>title</th><th>slug</th><th>folder</th><th class="num">words</th><th>updated</th></tr></thead>
+    <tbody>
+      {% for p in pages %}
+        <tr>
+          <td><a href="{{ url_for('wiki.view_page', slug=p.slug) }}">{{ p.title }}</a></td>
+          <td><code class="small">{{ p.slug }}</code></td>
+          <td><span class="folder-chip" style="--accent: {{ p.folder|folder_accent }}">{{ p.folder or 'root' }}</span></td>
+          <td class="num">{{ p.word_count }}</td>
+          <td class="muted small">{{ p.mtime|mtime }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

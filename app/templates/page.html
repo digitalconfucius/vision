@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<article class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    {% set parts = page.slug.split('/') %}
+    {% for part in parts %}
+      <span class="crumb-sep">›</span>
+      {% if loop.last %}
+        <span class="crumb crumb--current">{{ page.title }}</span>
+      {% else %}
+        <span class="crumb crumb--folder" style="color: {{ part|folder_accent }}">{{ part|folder_label }}</span>
+      {% endif %}
+    {% endfor %}
+    <span class="spacer"></span>
+    <a class="page-action" href="{{ url_for('wiki.edit_page', slug=page.slug) }}" title="Edit (e)">edit</a>
+  </div>
+
+  {% if tags %}
+    <div class="page-tags">
+      {% for t in tags %}
+        <a class="tag-pill" href="{{ url_for('wiki.tag_pages', tag=t) }}">#{{ t }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="page-body markdown">
+    {{ html | safe }}
+  </div>
+
+  <footer class="page-foot">
+    <section class="backlinks">
+      <h3 class="foot-head">backlinks <span class="muted">({{ backlinks|length }})</span></h3>
+      {% if backlinks %}
+        <ul class="list-compact">
+          {% for b in backlinks %}
+            <li><a href="{{ url_for('wiki.view_page', slug=b.slug) }}">
+              <span class="dot" style="background: {{ b.folder|folder_accent }}"></span>
+              <span class="list-title">{{ b.title }}</span>
+              <span class="list-folder muted">{{ b.folder }}</span>
+            </a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">no pages link here yet.</p>
+      {% endif %}
+    </section>
+  </footer>
+</article>
+{% endblock %}
+
+{% block right_sidebar %}
+<section class="side-section">
+  <h4 class="side-head">on this page</h4>
+  {% if toc %}
+    <ul class="toc-list">
+      {% for h in toc recursive %}
+        <li><a href="#{{ h.id }}" class="toc-l{{ h.level }}">{{ h.name }}</a>
+          {% if h.children %}<ul>{{ loop(h.children) }}</ul>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted small">no headings</p>
+  {% endif %}
+</section>
+
+<section class="side-section">
+  <h4 class="side-head">metadata</h4>
+  <ul class="meta-list">
+    <li><span>path</span><code>{{ page.path }}</code></li>
+    <li><span>folder</span><code>{{ page.folder or 'root' }}</code></li>
+    <li><span>updated</span><code>{{ page.mtime|mtime }}</code></li>
+    <li><span>words</span><code>{{ page.word_count }}</code></li>
+  </ul>
+</section>
+
+<section class="side-section">
+  <h4 class="side-head">outgoing ({{ outgoing|length }})</h4>
+  {% if outgoing %}
+    <ul class="side-list">
+      {% for o in outgoing %}
+        <li>
+          <a href="{{ url_for('wiki.view_page', slug=o.slug) }}"
+             class="{% if o.broken %}wikilink wikilink--broken{% else %}wikilink{% endif %}">
+            {{ o.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted small">no outgoing links</p>
+  {% endif %}
+</section>
+{% endblock %}

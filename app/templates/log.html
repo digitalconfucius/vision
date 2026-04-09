@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}log{% endblock %}
+{% block content %}
+<article class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb crumb--current">log</span>
+  </div>
+  <h1 class="page-title">log</h1>
+  <p class="muted">chronological record of ingests, queries, lint passes, and edits.</p>
+  <div class="page-body markdown">{{ html | safe }}</div>
+</article>
+{% endblock %}

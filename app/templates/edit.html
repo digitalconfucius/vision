@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}edit · {{ page.title }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="breadcrumbs">
+    <a class="crumb" href="{{ url_for('wiki.dashboard') }}">◆</a>
+    <span class="crumb-sep">›</span>
+    <a class="crumb" href="{{ url_for('wiki.view_page', slug=page.slug) }}">{{ page.title }}</a>
+    <span class="crumb-sep">›</span>
+    <span class="crumb crumb--current">edit</span>
+  </div>
+  <h1 class="page-title">editing <code>{{ page.path }}</code></h1>
+  <p class="muted">quick fixes only — for substantial edits, ask claude code instead.</p>
+  <form method="post" class="edit-form">
+    <textarea name="body" class="edit-area" spellcheck="false">{{ raw_text }}</textarea>
+    <div class="edit-actions">
+      <button class="btn-primary" type="submit">save</button>
+      <a class="btn-ghost" href="{{ url_for('wiki.view_page', slug=page.slug) }}">cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

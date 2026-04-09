@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}vision{% endblock %} · vision</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="theme-dark">
+
+<header class="topbar">
+  <a class="brand" href="{{ url_for('wiki.dashboard') }}">
+    <span class="brand-mark">◆</span><span class="brand-name">vision</span>
+  </a>
+  <div class="topsearch">
+    <span class="topsearch-icon">⌕</span>
+    <input id="global-search" type="search" placeholder="Search wiki…  (press / to focus)"
+           autocomplete="off" spellcheck="false">
+    <div id="search-dropdown" class="search-dropdown hidden"></div>
+  </div>
+  <nav class="topnav">
+    <a href="{{ url_for('wiki.graph_view') }}" title="Graph (g g)">graph</a>
+    <a href="{{ url_for('wiki.page_index') }}" title="Index (g i)">index</a>
+    <a href="{{ url_for('wiki.tags_index') }}" title="Tags (g t)">tags</a>
+    <a href="{{ url_for('wiki.log_view') }}" title="Log (g l)">log</a>
+    <a class="btn-primary" href="{{ url_for('wiki.new_page') }}" title="New (n)">+ new</a>
+    <form method="post" action="{{ url_for('wiki.reindex') }}" class="inline-form">
+      <button class="btn-ghost" type="submit" title="Reindex">↻</button>
+    </form>
+  </nav>
+</header>
+
+<div class="app">
+  <aside class="sidebar sidebar--left" id="sidebar-left">
+    {% include '_sidebar_left.html' %}
+  </aside>
+
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <aside class="sidebar sidebar--right" id="sidebar-right">
+    {% block right_sidebar %}
+      {% include '_sidebar_right.html' %}
+    {% endblock %}
+  </aside>
+</div>
+
+<div id="shortcut-modal" class="modal hidden" role="dialog" aria-hidden="true">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>keyboard shortcuts</h3>
+      <button class="btn-ghost" data-close-modal>×</button>
+    </div>
+    <table class="kbd-table">
+      <tr><td><kbd>/</kbd></td><td>focus search</td></tr>
+      <tr><td><kbd>g</kbd> <kbd>h</kbd></td><td>home / dashboard</td></tr>
+      <tr><td><kbd>g</kbd> <kbd>g</kbd></td><td>graph view</td></tr>
+      <tr><td><kbd>g</kbd> <kbd>i</kbd></td><td>full index</td></tr>
+      <tr><td><kbd>g</kbd> <kbd>t</kbd></td><td>tags</td></tr>
+      <tr><td><kbd>g</kbd> <kbd>l</kbd></td><td>log</td></tr>
+      <tr><td><kbd>e</kbd></td><td>edit current page</td></tr>
+      <tr><td><kbd>n</kbd></td><td>new page</td></tr>
+      <tr><td><kbd>[</kbd></td><td>toggle left sidebar</td></tr>
+      <tr><td><kbd>]</kbd></td><td>toggle right sidebar</td></tr>
+      <tr><td><kbd>?</kbd></td><td>this panel</td></tr>
+      <tr><td><kbd>esc</kbd></td><td>close modal / blur search</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+  window.__VISION__ = {
+    currentSlug: {{ (page.slug if page is defined and page else None) | tojson }},
+  };
+</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>
